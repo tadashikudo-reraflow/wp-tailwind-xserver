@@ -444,6 +444,160 @@ img { max-width: 100%; display: block; }
 .site-footer a:hover { color: #fff; }
 
 /* ==========================================================================
+   Single Post
+   ========================================================================== */
+
+.rr-single {
+	padding: 80px 0;
+	background: #fff;
+	min-height: 60vh;
+}
+
+.rr-single__inner {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.rr-single__meta {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.rr-single__date {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.875rem;
+	color: #999;
+}
+
+.rr-single__title,
+h1.rr-single__title,
+.rr-single .wp-block-post-title {
+	font-size: 1.75rem;
+	font-weight: 700;
+	color: var(--color-text);
+	line-height: 1.5;
+	margin: 0 0 48px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.rr-single__content,
+.rr-single .wp-block-post-content {
+	font-size: 1rem;
+	line-height: 1.9;
+	color: var(--color-text);
+}
+
+.rr-single__content p { margin: 0 0 1.5em; }
+.rr-single__content h2 { font-size: 1.375rem; font-weight: 700; margin: 2em 0 0.75em; }
+.rr-single__content h3 { font-size: 1.125rem; font-weight: 700; margin: 1.5em 0 0.5em; }
+.rr-single__content a { color: var(--color-emphasis); text-decoration: underline; }
+.rr-single__content ul, .rr-single__content ol { padding-left: 1.5em; margin: 0 0 1.5em; }
+.rr-single__content li { margin-bottom: 0.5em; }
+
+.rr-single__back {
+	margin-top: 64px;
+	padding-top: 24px;
+	border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   Page Content (法的ページ等)
+   ========================================================================== */
+
+.rr-single__content table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0 0 1.5em;
+}
+
+.rr-single__content th,
+.rr-single__content td {
+	padding: 14px 16px 14px 0;
+	border-bottom: 1px solid var(--color-border);
+	font-size: 0.9375rem;
+	vertical-align: top;
+	text-align: left;
+}
+
+.rr-single__content th {
+	font-weight: 600;
+	color: var(--color-text);
+	width: 160px;
+	white-space: nowrap;
+}
+
+.rr-single__content td { color: var(--color-text-light); }
+
+/* ==========================================================================
+   Contact Form 7
+   ========================================================================== */
+
+.rr-contact-form { max-width: 640px; }
+
+.wpcf7-form label {
+	display: block;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--color-text);
+	margin-bottom: 20px;
+}
+
+.wpcf7-form input[type="text"],
+.wpcf7-form input[type="email"],
+.wpcf7-form select,
+.wpcf7-form textarea {
+	display: block;
+	width: 100%;
+	margin-top: 6px;
+	padding: 12px 16px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	font-size: 1rem;
+	font-family: 'Noto Sans JP', sans-serif;
+	color: var(--color-text);
+	background: #fff;
+	transition: border-color 0.2s;
+}
+
+.wpcf7-form input:focus,
+.wpcf7-form select:focus,
+.wpcf7-form textarea:focus {
+	outline: none;
+	border-color: var(--color-emphasis);
+}
+
+.wpcf7-form textarea { min-height: 160px; resize: vertical; }
+
+.wpcf7-form input[type="submit"] {
+	display: inline-block;
+	padding: 16px 48px;
+	background: var(--color-emphasis);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s;
+	margin-top: 8px;
+}
+
+.wpcf7-form input[type="submit"]:hover {
+	background: var(--color-emphasis-dark);
+}
+
+.wpcf7-response-output {
+	margin-top: 16px;
+	padding: 12px 16px;
+	border-radius: 8px;
+	font-size: 0.9375rem;
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 
