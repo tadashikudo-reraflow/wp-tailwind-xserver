@@ -1,10 +1,10 @@
 #!/bin/bash
 # =============================================================================
-# setup-deploy.sh — Xserver SSH + rsync deploy setup
-# Usage: ./setup-deploy.sh <ssh-user> <server> <domain> [theme-name]
+# setup-deploy.sh — Xserver SSH + GitHub SSH + rsync deploy setup
+# Usage: ./setup-deploy.sh <ssh-user> <server> <domain> [theme-name] [github-user]
 #
 # Example:
-#   ./setup-deploy.sh reraflow sv16843 reraflow.com reraflow-theme
+#   ./setup-deploy.sh reraflow sv16843 reraflow.com reraflow-theme tadashikudo-reraflow
 # =============================================================================
 
 set -e
@@ -13,40 +13,46 @@ SSH_USER="${1}"
 SERVER="${2}"
 DOMAIN="${3}"
 THEME_NAME="${4:-$(basename "$PWD")}"
+GITHUB_USER="${5:-}"
 KEY_NAME="xserver_${SSH_USER}"
 KEY_PATH="$HOME/.ssh/${KEY_NAME}"
+GITHUB_KEY_PATH="$HOME/.ssh/github_${SSH_USER}"
 FULL_SERVER="${SERVER}.xserver.jp"
 
 # Validate args
 if [[ -z "$SSH_USER" || -z "$SERVER" || -z "$DOMAIN" ]]; then
-  echo "Usage: ./setup-deploy.sh <ssh-user> <server> <domain> [theme-name]"
-  echo "Example: ./setup-deploy.sh reraflow sv16843 reraflow.com my-theme"
+  echo "Usage: ./setup-deploy.sh <ssh-user> <server> <domain> [theme-name] [github-user]"
+  echo "Example: ./setup-deploy.sh reraflow sv16843 reraflow.com my-theme tadashikudo-reraflow"
   exit 1
 fi
 
 echo ""
-echo "=== WP Tailwind Xserver Deploy Setup ==="
-echo "  User:   $SSH_USER"
-echo "  Server: $FULL_SERVER"
-echo "  Domain: $DOMAIN"
-echo "  Theme:  $THEME_NAME"
-echo "  Key:    $KEY_PATH"
+echo "=== WP Tailwind Deploy Setup ==="
+echo "  Xserver User: $SSH_USER @ $FULL_SERVER"
+echo "  Domain:       $DOMAIN"
+echo "  Theme:        $THEME_NAME"
+[[ -n "$GITHUB_USER" ]] && echo "  GitHub:       $GITHUB_USER"
 echo ""
 
-# Step 1: Generate SSH key (skip if exists)
+# ── Xserver SSH ──────────────────────────────────────────────────────────────
+
+# Step 1: Generate Xserver SSH key
 if [[ -f "$KEY_PATH" ]]; then
-  echo "✓ SSH key already exists: $KEY_PATH"
+  echo "✓ Xserver SSH key already exists"
 else
-  echo "→ Generating SSH key..."
+  echo "→ Generating Xserver SSH key..."
   ssh-keygen -t ed25519 -C "${SSH_USER}-deploy" -f "$KEY_PATH" -N ""
-  echo "✓ SSH key generated"
+  echo "✓ Xserver SSH key generated"
 fi
 
-# Step 2: Add to SSH config
+# Step 2: Add to macOS Keychain (no passphrase prompts ever again)
+ssh-add --apple-use-keychain "$KEY_PATH" 2>/dev/null && echo "✓ Xserver key added to macOS Keychain" || true
+
+# Step 3: SSH config for Xserver
 if grep -q "Host xserver-${SSH_USER}" "$HOME/.ssh/config" 2>/dev/null; then
-  echo "✓ SSH config already has entry for xserver-${SSH_USER}"
+  echo "✓ SSH config entry already exists for xserver-${SSH_USER}"
 else
-  echo "→ Adding SSH config entry..."
+  echo "→ Adding Xserver SSH config..."
   cat >> "$HOME/.ssh/config" << EOF
 
 Host xserver-${SSH_USER}
@@ -54,16 +60,59 @@ Host xserver-${SSH_USER}
   Port 10022
   User ${SSH_USER}
   IdentityFile ${KEY_PATH}
+  UseKeychain yes
+  AddKeysToAgent yes
 EOF
   chmod 600 "$HOME/.ssh/config"
-  echo "✓ SSH config updated"
+  echo "✓ Xserver SSH config added"
 fi
 
-# Step 3: Update package.json deploy script
-if [[ -f "package.json" ]]; then
-  DEPLOY_CMD="npm run build && rsync -avz --delete -e 'ssh -p 10022 -i ${KEY_PATH}' --exclude='.git' --exclude='.claude' --exclude='node_modules' --exclude='src' --exclude='package*.json' --exclude='DESIGN.md' --exclude='CLAUDE.md' --exclude='README.md' --exclude='setup-deploy.sh' --exclude='preview.html' ./ ${SSH_USER}@${FULL_SERVER}:~/${DOMAIN}/public_html/wp-content/themes/${THEME_NAME}/ && echo '✓ Deploy complete → ${DOMAIN}'"
+# ── GitHub SSH ───────────────────────────────────────────────────────────────
 
-  # Use node to update package.json safely
+if [[ -n "$GITHUB_USER" ]]; then
+  # Step 4: Generate GitHub SSH key
+  if [[ -f "$GITHUB_KEY_PATH" ]]; then
+    echo "✓ GitHub SSH key already exists"
+  else
+    echo "→ Generating GitHub SSH key..."
+    ssh-keygen -t ed25519 -C "${GITHUB_USER}@github" -f "$GITHUB_KEY_PATH" -N ""
+    echo "✓ GitHub SSH key generated"
+  fi
+
+  # Step 5: Add GitHub key to macOS Keychain
+  ssh-add --apple-use-keychain "$GITHUB_KEY_PATH" 2>/dev/null && echo "✓ GitHub key added to macOS Keychain" || true
+
+  # Step 6: SSH config for GitHub
+  if grep -q "Host github.com" "$HOME/.ssh/config" 2>/dev/null; then
+    echo "✓ GitHub SSH config already exists"
+  else
+    echo "→ Adding GitHub SSH config..."
+    cat >> "$HOME/.ssh/config" << EOF
+
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ${GITHUB_KEY_PATH}
+  UseKeychain yes
+  AddKeysToAgent yes
+EOF
+    chmod 600 "$HOME/.ssh/config"
+    echo "✓ GitHub SSH config added"
+  fi
+
+  # Step 7: Switch git remote from HTTPS to SSH
+  if git remote get-url origin 2>/dev/null | grep -q "https://github.com"; then
+    CURRENT_REMOTE=$(git remote get-url origin)
+    SSH_REMOTE=$(echo "$CURRENT_REMOTE" | sed 's|https://github.com/|git@github.com:|')
+    git remote set-url origin "$SSH_REMOTE"
+    echo "✓ Git remote switched to SSH: $SSH_REMOTE"
+  fi
+fi
+
+# ── package.json deploy script ───────────────────────────────────────────────
+
+if [[ -f "package.json" ]]; then
+  DEPLOY_CMD="npm run build && rsync -avz --delete -e 'ssh -p 10022' --exclude='.git' --exclude='.claude' --exclude='node_modules' --exclude='src' --exclude='package*.json' --exclude='DESIGN.md' --exclude='CLAUDE.md' --exclude='README.md' --exclude='setup-deploy.sh' --exclude='preview.html' ./ xserver-${SSH_USER}:~/${DOMAIN}/public_html/wp-content/themes/${THEME_NAME}/ && echo '✓ Deploy complete → ${DOMAIN}'"
   node -e "
     const fs = require('fs');
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -73,18 +122,31 @@ if [[ -f "package.json" ]]; then
   echo "✓ package.json deploy script updated"
 fi
 
-# Step 4: Show public key
+# ── Summary ──────────────────────────────────────────────────────────────────
+
 echo ""
 echo "=========================================="
-echo "NEXT STEP — Register this public key in Xserver:"
-echo "  Panel → SSH公開鍵登録"
+echo "MANUAL STEPS REQUIRED:"
+echo ""
+echo "1. Register Xserver public key:"
+echo "   Xserver Panel → SSH公開鍵登録"
 echo ""
 cat "${KEY_PATH}.pub"
 echo ""
+
+if [[ -n "$GITHUB_USER" ]]; then
+  echo "------------------------------------------"
+  echo "2. Register GitHub public key:"
+  echo "   https://github.com/settings/ssh/new"
+  echo ""
+  cat "${GITHUB_KEY_PATH}.pub"
+  echo ""
+fi
+
 echo "=========================================="
 echo ""
-echo "After registering the key, run:"
-echo "  ssh-add ${KEY_PATH}   # (skip passphrase prompts)"
-echo "  ssh xserver-${SSH_USER}   # (test connection)"
-echo "  npm run deploy             # (deploy to ${DOMAIN})"
+echo "After registering keys:"
+echo "  ssh xserver-${SSH_USER}   # test Xserver"
+[[ -n "$GITHUB_USER" ]] && echo "  ssh -T git@github.com      # test GitHub"
+echo "  npm run deploy             # deploy to ${DOMAIN}"
 echo ""
