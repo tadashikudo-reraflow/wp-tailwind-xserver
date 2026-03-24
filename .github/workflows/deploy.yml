@@ -1,0 +1,42 @@
+name: Deploy to Xserver
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.XSERVER_SSH_KEY }}
+
+      # Replace sv00000.xserver.jp with your Xserver hostname
+      - run: ssh-keyscan -p 10022 ${{ secrets.XSERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - run: |
+          rsync -avz --delete \
+            -e 'ssh -p 10022' \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.claude' \
+            --exclude='node_modules' \
+            --exclude='src' \
+            --exclude='package*.json' \
+            --exclude='DESIGN.md' \
+            --exclude='CLAUDE.md' \
+            --exclude='preview.html' \
+            --exclude='.gitignore' \
+            ./ ${{ secrets.XSERVER_USER }}@${{ secrets.XSERVER_HOST }}:${{ secrets.XSERVER_THEME_PATH }}
