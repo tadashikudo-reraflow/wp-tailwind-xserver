@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   WP Tailwind Starter — Custom CSS
+   Edit DESIGN.md to update design tokens, then reflect here.
+   ========================================================================== */
+
+@theme inline {
+	/* Primary — edit in DESIGN.md */
+	--color-primary: #7FB8E6;
+	--color-primary-light: #A2C6E9;
+	--color-primary-dark: #5A9BD4;
+
+	/* Accent */
+	--color-accent: #FFF5D1;
+
+	/* Emphasis */
+	--color-emphasis: #4A90E2;
+	--color-emphasis-dark: #357ABD;
+
+	/* Text */
+	--color-text: #333333;
+	--color-text-light: #666666;
+
+	/* Neutral */
+	--color-surface: #F5F5F5;
+	--color-border: #E6E7EA;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+body {
+	font-family: 'Noto Sans JP', sans-serif;
+	color: var(--color-text);
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Header — Sticky with blur
+   ========================================================================== */
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: rgba(255, 255, 255, 0.9);
+	backdrop-filter: blur(12px);
+	border-bottom: 1px solid var(--color-border);
+	transition: background 0.3s ease;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.hero-section {
+	position: relative;
+	overflow: hidden;
+}
+
+.hero-section::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: url("data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 300 Q200 100 400 300 T800 300' stroke='rgba(255,255,255,0.2)' fill='none' stroke-width='1.5'/%3E%3Ccircle cx='150' cy='200' r='80' stroke='rgba(255,255,255,0.15)' fill='none' stroke-width='1'/%3E%3Ccircle cx='650' cy='150' r='120' stroke='rgba(255,255,255,0.12)' fill='none' stroke-width='1'/%3E%3Cpath d='M100 0 L300 200 L100 400' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='1'/%3E%3Cpath d='M500 50 L700 250 L500 450' stroke='rgba(255,255,255,0.1)' fill='none' stroke-width='1'/%3E%3Cline x1='0' y1='150' x2='800' y2='450' stroke='rgba(255,255,255,0.08)' stroke-width='1'/%3E%3C/svg%3E");
+	background-size: cover;
+	background-position: center;
+	pointer-events: none;
+}
+
+.hero-en-display {
+	font-family: 'Inter', sans-serif;
+}
+
+.hero-section .wp-block-paragraph {
+	text-shadow: 0 1px 8px rgba(50, 90, 140, 0.4);
+}
+
+/* ==========================================================================
+   Service Cards
+   ========================================================================== */
+
+.service-card {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Work Cards
+   ========================================================================== */
+
+.work-card {
+	transition: transform 0.2s ease;
+}
+
+.work-card:hover {
+	transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Section Labels
+   ========================================================================== */
+
+.section-label-en {
+	font-family: 'Inter', sans-serif;
+}
+
+/* ==========================================================================
+   Company / Info Table
+   ========================================================================== */
+
+.company-card {
+	background-color: var(--color-white, #fff);
+	border-radius: 16px;
+	padding: 48px;
+	max-width: 900px;
+	margin: 0 auto;
+	box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.company-table table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.company-table td,
+.company-table th {
+	border: none;
+	border-bottom: 1px solid var(--color-border);
+	padding: 16px 16px 16px 0;
+	font-size: 0.9375rem;
+	vertical-align: top;
+	text-align: left;
+}
+
+.company-table th {
+	font-weight: 600;
+	color: var(--color-text);
+	width: 140px;
+}
+
+.company-table td {
+	color: var(--color-text-light);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer a {
+	color: rgba(255, 255, 255, 0.8);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+	color: #FFFFFF;
+}
+
+.footer-nav {
+	list-style: none;
+	padding: 0;
+}
+
+/* ==========================================================================
+   CTA Section
+   ========================================================================== */
+
+.cta-section {
+	position: relative;
+}
+
+/* ==========================================================================
+   Mobile Menu (Hamburger)
+   ========================================================================== */
+
+.hamburger {
+	display: none;
+	cursor: pointer;
+	background: none;
+	border: none;
+	width: 32px;
+	height: 24px;
+	position: relative;
+	z-index: 60;
+}
+
+.hamburger span {
+	display: block;
+	width: 100%;
+	height: 2px;
+	background: var(--color-text);
+	position: absolute;
+	left: 0;
+	transition: all 0.3s ease;
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 11px; }
+.hamburger span:nth-child(3) { top: 22px; }
+
+.hamburger.active span:nth-child(1) { top: 11px; transform: rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { top: 11px; transform: rotate(-45deg); }
+
+.mobile-nav {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 55;
+	background: rgba(255, 255, 255, 0.97);
+	backdrop-filter: blur(12px);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 32px;
+}
+
+.mobile-nav.active {
+	display: flex;
+}
+
+.mobile-nav a {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--color-text);
+	text-decoration: none;
+}
+
+.mobile-nav .mobile-cta {
+	background: var(--color-emphasis);
+	color: #fff;
+	padding: 14px 40px;
+	border-radius: 8px;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+	.hero-en-display {
+		font-size: 2.5rem !important;
+	}
+
+	.service-card {
+		flex-direction: column !important;
+	}
+
+	.service-card > .wp-block-group:first-child {
+		flex-basis: auto !important;
+		width: 100%;
+	}
+
+	.hamburger {
+		display: block;
+	}
+}

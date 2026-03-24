@@ -1,0 +1,16 @@
+{
+	"name": "wp-tailwind-starter",
+	"version": "1.0.0",
+	"private": true,
+	"description": "WordPress FSE Block Theme with Tailwind CSS v4 + Xserver SSH Deploy",
+	"scripts": {
+		"build": "npx @tailwindcss/cli -i ./src/input.css -o ./assets/css/tailwind.css --minify",
+		"watch": "npx @tailwindcss/cli -i ./src/input.css -o ./assets/css/tailwind.css --watch",
+		"deploy": "npm run build && rsync -avz --delete -e 'ssh -p 10022 -i ~/.ssh/xserver_KEY' --exclude='.git' --exclude='.claude' --exclude='node_modules' --exclude='src' --exclude='package*.json' --exclude='DESIGN.md' --exclude='CLAUDE.md' --exclude='README.md' --exclude='setup-deploy.sh' --exclude='preview.html' ./ USER@SERVER.xserver.jp:~/DOMAIN/public_html/wp-content/themes/THEME_NAME/ && echo '✓ Deploy complete'",
+		"zip": "VERSION=$(node -p \"require('./package.json').version\") && cd .. && zip -r \"wp-tailwind-starter-v$VERSION.zip\" wp-tailwind-xserver/ -x 'wp-tailwind-xserver/node_modules/*' 'wp-tailwind-xserver/.git/*' 'wp-tailwind-xserver/src/*' 'wp-tailwind-xserver/package*.json' 'wp-tailwind-xserver/DESIGN.md' 'wp-tailwind-xserver/README.md' 'wp-tailwind-xserver/setup-deploy.sh' && echo \"✓ wp-tailwind-starter-v$VERSION.zip\""
+	},
+	"devDependencies": {
+		"@tailwindcss/cli": "^4.1.0",
+		"tailwindcss": "^4.1.0"
+	}
+}
