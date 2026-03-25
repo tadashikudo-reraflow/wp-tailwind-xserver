@@ -42,6 +42,15 @@ function wpts_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'wpts_enqueue_styles', 100 );
 
 /**
+ * CF7: load JS on contact page only, suppress CSS
+ */
+function wpts_cf7_load( $load ) {
+	return is_page( 'contact' );
+}
+add_filter( 'wpcf7_load_js', 'wpts_cf7_load' );
+add_filter( 'wpcf7_load_css', '__return_false' );
+
+/**
  * Register block pattern category
  */
 function wpts_register_pattern_categories() {

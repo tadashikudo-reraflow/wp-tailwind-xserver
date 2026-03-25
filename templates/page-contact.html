@@ -1,5 +1,33 @@
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:pattern {"slug":"wpts/contact"} /-->
+<!-- wp:group {"tagName":"main","className":"rr-single","layout":{"type":"constrained","contentSize":"800px"},"style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
+<main class="wp-block-group rr-single">
+	<div class="rr-single__inner">
+
+		<!-- wp:group {"className":"rr-section__header","style":{"spacing":{"margin":{"bottom":"40px"}}}} -->
+		<div class="wp-block-group rr-section__header">
+			<!-- wp:paragraph {"className":"rr-label"} -->
+			<p class="rr-label">contact</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:heading {"level":1,"style":{"typography":{"textAlign":"left"}}} -->
+			<h1 style="text-align:left;">Contact Us</h1>
+			<!-- /wp:heading -->
+			<!-- wp:paragraph {"style":{"typography":{"textAlign":"left"}}} -->
+			<p style="text-align:left;">Feel free to reach out with any questions.<br>We typically reply within 2 business days.</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"rr-contact-form"} -->
+		<div class="wp-block-group rr-contact-form">
+			<!-- wp:shortcode -->
+			[contact-form-7 id="YOUR_CF7_ID" title="Contact form 1"]
+			<!-- /wp:shortcode -->
+		</div>
+		<!-- /wp:group -->
+
+	</div>
+</main>
+<!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

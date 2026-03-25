@@ -1,0 +1,48 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"rr-single","layout":{"type":"constrained","contentSize":"800px"},"style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
+<main class="wp-block-group rr-single">
+	<div class="rr-single__inner">
+
+		<!-- wp:group {"className":"rr-section__header","style":{"spacing":{"margin":{"bottom":"40px"}}}} -->
+		<div class="wp-block-group rr-section__header">
+			<!-- wp:paragraph {"className":"rr-label"} -->
+			<p class="rr-label">news</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:heading {"level":1,"style":{"typography":{"textAlign":"left"}}} -->
+			<h1 style="text-align:left;">ニュース</h1>
+			<!-- /wp:heading -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
+		<div class="wp-block-query">
+			<!-- wp:post-template {"className":"rr-news-list"} -->
+				<!-- wp:group {"className":"rr-news-item","tagName":"a","style":{"spacing":{"padding":{"top":"16px","bottom":"16px"}}}} -->
+				<div class="wp-block-group rr-news-item">
+					<!-- wp:post-date {"format":"Y.m.d","className":"rr-news-item__date"} /-->
+					<!-- wp:post-terms {"term":"category","className":"rr-news-item__tag"} /-->
+					<!-- wp:post-title {"isLink":true,"className":"rr-news-item__title","level":3} /-->
+				</div>
+				<!-- /wp:group -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-pagination {"className":"rr-news-pagination","layout":{"type":"flex","justifyContent":"center"}} -->
+				<!-- wp:query-pagination-previous /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next /-->
+			<!-- /wp:query-pagination -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph -->
+				<p>記事はまだありません。</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+
+	</div>
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

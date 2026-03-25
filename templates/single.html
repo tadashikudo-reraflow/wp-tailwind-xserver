@@ -1,5 +1,28 @@
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:pattern {"slug":"wpts/single-post"} /-->
+<!-- wp:group {"tagName":"main","className":"rr-single","layout":{"type":"constrained","contentSize":"800px"},"style":{"spacing":{"padding":{"top":"80px","bottom":"80px"}}}} -->
+<main class="wp-block-group rr-single">
+
+	<!-- wp:group {"className":"rr-single__meta","layout":{"type":"flex","flexWrap":"nowrap"},"style":{"spacing":{"blockGap":"12px","margin":{"bottom":"16px"}}}} -->
+	<div class="wp-block-group rr-single__meta">
+		<!-- wp:post-date {"format":"Y.m.d","className":"rr-single__date"} /-->
+		<!-- wp:post-terms {"term":"category","className":"rr-news-item__tag"} /-->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:post-title {"level":1,"className":"rr-single__title"} /-->
+
+	<!-- wp:post-content {"className":"rr-single__content","layout":{"type":"constrained","contentSize":"800px"}} /-->
+
+	<!-- wp:group {"style":{"spacing":{"margin":{"top":"48px"}}}} -->
+	<div class="wp-block-group">
+		<!-- wp:paragraph -->
+		<p><a href="/news" class="rr-link">← ニュース一覧へ</a></p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
